@@ -1,0 +1,74 @@
+---
+title: "HW5"
+author: "Nikhil Gopal"
+date: "10/16/2020"
+output: pdf_document
+---
+
+**Do treatments have an effect on the distribution of post minus pre scores?**
+
+```{r}
+
+
+setwd("C:/Users/d/Google Drive/Notability/Applied Linear Regression Analysis")
+
+data <- read.csv("deadseaminerals.csv")
+
+
+
+#create a column for the difference between post and pre scores
+data$difference <- data$post_y - data$pre_x
+
+#create a linear model on this data and use treatment group as a factor
+linmod_trt_group <- lm(data$difference ~ as.factor(data$trt_Grp))
+
+#run an ANOVA test on the model
+anova(linmod_trt_group)
+
+#generate a p value (should be same as ANOVA?)
+p_value_f_dist <- pf(26.792, 2,57,lower.tail = FALSE)
+
+summary(linmod_trt_group)
+p_value_f_dist
+
+```
+
+To determine weather treatments have an effect on the distribution of post minus pre scores, a one-way ANOVA was conducted with 57/2 degrees of freedom (3 groups, n = 60). The observed sum of squared means was 33666 and 16833.1, and our F value was 26.792, giving us a p value of less than 0.001. Thus, we can conclude that these treatments have a statistically significant effect on distribution of post - pre scores.
+
+**Does gel treatment have an effect on distribution of post minus pre scores?**
+
+```{r}
+
+#gel
+
+linmod_gel <- lm(data$difference ~ as.factor(data$gel))
+anova(linmod_gel)
+
+
+p_value_f_dist_gel <- pf(26.792, 2,57,lower.tail = FALSE)
+
+summary(linmod_gel)
+p_value_f_dist_gel
+
+```
+
+
+The exact same analysis was used here as above. However, our p value was 0.7001, which is much to high to conclude statistical significance. Thus, we cannot say that the gel treatment has a statistically significant effect.
+
+
+**Does gel + dead sea concentrate treatment have an effect on distribution of post minus pre scores?**
+
+```{r}
+
+linmod_gel_DS <- lm(data$difference ~ as.factor(data$gelDS))
+anova(linmod_gel_DS)
+
+p_value_f_dist_gelDS <- pf(26.792, 2,57,lower.tail = FALSE)
+
+summary(linmod_gel_DS)
+
+
+```
+
+
+In this case, we can say that the gel treatment plus the dead sea concentrate has a significant effect on the distribution. The p value was less than 0.001, meaning there is a statistically significant effect.

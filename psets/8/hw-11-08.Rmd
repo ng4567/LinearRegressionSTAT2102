@@ -1,0 +1,123 @@
+---
+title: "Untitled"
+author: "Nikhil Gopal"
+date: "11/8/2020"
+output: pdf_document
+---
+**Question 1**
+```{r}
+
+setwd("/Users/nikhilgopal/Google Drive/Notability/Applied Linear Regression Analysis/psets")
+
+data <- read.csv("insurance.csv")
+
+#Question 1
+
+lin_mod <- lm(charges~age+sex+bmi+children+smoker+region, data = data)
+
+lin_mod_log <-lm(log(charges)~age+sex+bmi+children+smoker+region, data = data)
+
+hist(x=log(data$charges))
+
+#log is the best transformation
+```
+
+**Question 2**
+
+```{r}
+#Age
+mean(data$age)
+sd(data$age)
+min(data$age)
+max(data$age)
+
+#Sex
+prop.table(table(data$sex))
+
+#Smoker
+prop.table(table(data$smoker))
+
+#Children
+mean(data$children)
+sd(data$children)
+min(data$children)
+max(data$children)
+
+#BMI
+mean(data$bmi)
+sd(data$bmi)
+min(data$bmi)
+max(data$bmi)
+
+#Region
+prop.table(table(data$region))
+
+```
+
+**Question 3**
+
+```{r}
+
+#Question 3
+lm_age <- lm(charges~age, data = data)
+summary(lm_age)
+#f=131.2 on 1336 DF
+
+lm_sex <- lm(charges~sex, data=data)
+summary(lm_sex)
+anova(lm_sex)
+
+#p = 0.03615
+
+lm_bmi <- lm(charges~bmi, data=data)
+summary(lm_bmi)
+
+#F = 54.71 on 1336 DF
+
+lm_children <- lm(charges~children, data = data)
+summary(lm_children)
+
+#F = 6.206 on 1336 DF
+
+lm_smoker <- lm(charges~smoker, data = data)
+anova(lm_smoker)
+
+#p is basically zero 2.2e^-16
+
+lm_region <- lm(charges~region, data=data)
+anova(lm_region)
+
+#P = 0.03089
+
+```
+
+
+**Question 4**
+
+```{r}
+#Question 4
+summary(lin_mod_log)
+```
+
+**Question 4.5**
+
+```{r}
+#Question 4.5
+plot(x=data$charges,y=residuals(lin_mod_log), xlab = "Health insurance Charges (Dollars)", ylab = "Residuals of model using log on Y variable")
+
+plot(residuals(lin_mod_log))
+```
+
+**Question 5**
+
+I think the only insignificant factors in the model (in terms of effect) are sex and region. However, I would include them in the model, because they don't give a much higher R^2 when removed (meaning the model doesn't get much better without them), and because intutively it makes sense to me that having more variables in the model gives us a better prediction of effects on insurance charges. This model can also give us a better prediction for people that fall in those specific categories (sex/region), as opposed to people of both sexes or people in all regions.
+
+
+**Question 6**
+
+```{r}
+poly1 <- lm(log(charges)~poly(age,3, raw = TRUE)+sex+data$smoker:bmi+children+data$smoker+region, data = data)
+summary(poly1)
+```
+
+For this question, I was able to get the r^2 up to 0.78, up from 0.76. I added extra weight to age, and I multipled smoker status and BMI. I figured that old people likely had more health insurance charges, so I overweighted age in the model. I also figured that smokers who had high BMI's would have more charges, so I included that as an interaction. The increase in statistical significance was small, but the model I came up with was still better than the original model, and it makes sense intuitively.

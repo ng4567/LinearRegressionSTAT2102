@@ -1,0 +1,54 @@
+---
+title: '8'
+author: "Nikhil Gopal"
+date: "11/12/2020"
+output: pdf_document
+---
+
+**Question 1**
+
+```{r}
+
+data1 <- read.csv("/Users/nikhilgopal/Desktop/1.csv")
+
+model <- lm(bp~rt, data = data1)
+
+ttest <- t.test(data1$bp[data1$rt=="Placebo"], data1$bp[data1$rt=="Medication"])
+
+summary(ttest)
+
+```
+
+There is a statistically significant difference in the 2 means, placebo group has a higher blood pressure than treatment group.
+
+**Question 2**
+
+```{r}
+data2 <-read.csv("/Users/nikhilgopal/Desktop/2.csv")
+
+data2$order_of_runs = as.factor(data2$order_of_runs)
+
+modell <- lm(time~treatment_amount+order_of_runs, data = data2)
+
+summary(modell)
+```
+
+It appears that this model fits the data very well, with an r^2 of 0.96. Treatment amount has a small effect on maze completion time, as an increase of 1 unit treatment will result in a 0.02 second increase in time. However, doses are increased by relatively small amounts that are nowhere close to 1 unit, so the effect of treatment is essentially negligible. The model shows that order of runs seems to be the most important variable that affects time. In the model, I made order of runs a factor so that R treated it as categorical instead of quantitative data.
+
+
+
+**Question 3**
+
+```{r}
+
+data3 <- read.csv("/Users/nikhilgopal/Desktop/3.csv")
+
+data3$amily = as.factor(data3$amily)
+data3$subject = as.factor(data3$subject)
+
+modelll <- lm(y~subject+amily+subject*amily, data = data3)
+
+summary(modelll)
+```
+
+This model does not appear to fit the data well with an R^2 of 0.5. Also, some subjects and families affect the model more than others, meaning that there likely is not a relationship there.

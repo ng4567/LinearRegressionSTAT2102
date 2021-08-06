@@ -1,0 +1,114 @@
+---
+title: "HW6"
+author: "Nikhil Gopal"
+date: "10/23/2020"
+output: pdf_document
+---
+
+```{r}
+setwd("C:/Users/d/Google Drive/Notability/Applied Linear Regression Analysis/psets/6")
+
+data <- read.csv("week6.csv", header = FALSE)
+
+names(data)[1] <- "Brain.Weight"
+names(data)[2] <- "Body.Weight"
+data[1,1] <- 3.385
+
+```
+
+
+**A**
+
+```{r}
+#A
+linear_model <- lm(data$Brain.Weight ~ data$Body.Weight)
+
+```
+
+**B**
+
+```{r}
+#B
+#variance is residual standard error^2
+summary(linear_model)
+```
+
+
+Variance = 323.5
+
+**C**
+
+```{r}
+linear_model
+```
+
+Slope = 0.90291
+Intercept = -56.8555
+
+**D**
+
+```{r}
+#D
+summary(linear_model)
+```
+
+Standard error of slope: 0.04453
+Standard error of intercept: 42.97805
+
+**E**
+
+Yi = (0.90291 * Xi) - 56.8555
+Estimate = -55.04968
+
+**F**
+
+Standard error = 323.5
+
+
+**G**
+
+```{r}
+
+#G
+sterr <- 323.5
+
+#pt function is t distribution
+pvalue <- 2*pt(abs(sterr), df = 60, lower.tail = FALSE)
+
+pvalue
+
+```
+
+The p value for this test was less than 0.001. Thus, we can safely say that the conditional expectation = 3.
+
+**H**
+
+
+```{r}
+#H
+#SSE = Residual Standard Error
+#SST = sum((data$Brain.Weight - mean(data$Brain.Weight))^2)
+
+SST = NULL
+
+summary_model <- summary(linear_model)
+
+SSE = summary_model$sigma^2 * 60
+#SSR = SST - SSE
+SSR = NULL
+
+R2 <- summary_model$r.squared
+
+MSE = SSE/(62-2)
+MSR = SSR/1
+
+SST
+SSR
+SSE
+MSE
+MSR
+
+
+```
+
+For the above question I commented out the SSR/SST lines, for some reason R was giving me an error with the formatting of the data, but I am confident that I have the correct method for generating those values with the commented out lines for this question. Would like to follow up in office hours.

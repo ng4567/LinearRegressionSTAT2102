@@ -1,0 +1,91 @@
+---
+title: "HW7"
+author: "Nikhil Gopal"
+date: "10/30/2020"
+output: pdf_document
+---
+
+```{r}
+
+setwd("C:/Users/d/Google Drive/Notability/Applied Linear Regression Analysis/psets/7")
+
+data <- read.csv("df_for_comp_7.csv")
+
+
+#Question 1
+slide1data <- subset(data, subset = data$slide.no == "slide1")
+
+model = lm(slide1data$y~slide1data$x)
+summary(model)
+
+
+```
+
+In this model, x would be the time elapsed and the y variable would be the observed height. The parameters of the model would include things like gravity, and other errors. The inital velocity would be estimated by the intercept coefficient (2.734). Gravity would not be estimated in this model, since it would be one factor among many in the velocity of the projectile, derived from the change in observed height. I would estimate the position of the projectile by plugging time into the model. To test if the projectile is not moving, one could run a hypothesis test for the derivative of observed position with Ho = derivative(postion) != 0. The f statistic would be computed by R (5.8 on 98 df). To test if the projectile were higher at time 3 than 2, I would run a hypothesis test Ho = Ybar3 < Ybar2.
+
+
+```{r}
+
+#Question 2/3
+
+slide2data <- subset(data, subset = data$slide.no == "slide2.3")
+
+data$w = as.factor(data$w)
+
+model = lm( + slide2data$w)
+summary(model)
+
+#test if they are the same height
+same.heightmodel = lm(slide2data$y~slide2data$x)
+anova(same.heightmodel, model)
+
+#test if projectiles started on the ground
+ground_height_model = lm(slide2data$y ~ slide2data$x -1)
+anova(ground_height_model, model)
+
+
+#acceleration due to gravity
+slide2data$x.squared = slide2data$x^2
+
+acceleration_model = lm(slide2data$y~slide2data$x.squared + slide1data$x + slide2data$w)
+summary(acceleration_model)
+
+#acceleration due to gravity is the beta coefficient 0.12
+
+```
+
+Initial velocities would be the corresponding intercepts of the models. To test if the the 3 projectiles were on the same planet, I would hypothesis test that the beta acceleration due to gravity coefficient were equal to each other, since if the planets all had the same gravity they would be the same planet.
+
+
+```{r}
+#Question 4
+
+slide4data <- subset(data, subset = data$slide.no == "slide4")
+
+plot(slide4data$x, slide4data$y, main = "Position vs time of car", xlab = "Time", ylab = "Position")
+
+for(i in 1:100){
+  if(i==1){
+    slide4data$velocity[i] = 0
+  }else{
+    delta_x = slide4data$x[i]-slide4data$x[i-1]
+    delta_y = slide4data$y[i]-slide4data$y[i-1]
+    slide4data$velocity[i] = delta_y/delta_x
+  }
+}
+```
+
+TO test if the velocity dropped, I would do a t test for the velocity from To onward is less than velocity from time zero to t zero.
+
+```{r}
+
+
+#Question 5
+
+
+slide5data <- subset(data, subset = data$slide.no == "slide5")
+
+
+```
+
+This question was a little confusing to me since we weren't given any time data, only velocities for the cars and the w variable indicating which car. To test if the cars were standing still, I would test weather their ending velocities were equal to zero (keep in mind we don't have time data so we don't know which is ending velocity). To test if they were going the same direction, test if the cars all had velocities of the same sign, and I am not sure how to test if they started at the same spot only when given the velocity. This would be possible with position data, but unfortunately that isn't what was provided.

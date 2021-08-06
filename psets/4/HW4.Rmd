@@ -1,0 +1,189 @@
+---
+title: "HW4"
+author: "Nikhil Gopal"
+date: "10/9/2020"
+output: pdf_document
+---
+**1a**
+
+```{r}
+#1a
+
+sample <- rnorm(10, mean =0 , sd =1)
+mean(sample)
+```
+
+As you can see here, the data is generated using a normal distribution, but the mean is further away from the true mean of 0 than in the below cases.
+
+
+**1b**
+```{r}
+
+sample400 = rnorm(400, mean =0 , sd =1)
+mean(sample400)
+
+sample10000 = rnorm(10000, mean =0 , sd =1)
+mean(sample10000)
+```
+
+In these questions, the mean gets closer and closer to the true mean of 0 as the sample size increases. This is in accordance with the law of large numbers. If we take a large enough sample size, we will eventually get a sample average of the true mean, and larger samples should result in closer sample averages to the true mean.
+
+**1c**
+
+```{r}
+
+#create a matrix to hold generated samples, each row is a new sample
+#10 columns because you're generating 10 datapoints (n = 10)
+#average each row to get sample means
+matrix_holding_samples <- matrix(rnorm(900, mean = 0, sd = 1), nrow = 900, ncol = 10, byrow = TRUE)
+
+#calculate the sample means by summing the values of each row, then dividing by sample size
+sample_means <- rowSums(matrix_holding_samples)/10
+
+#sample variance of sample averages
+var(sample_means)
+
+#variance of distribution
+var(sample10000)
+
+#ratio of sample variance of sample averages : variance of my distribution
+var(sample_means)/var(sample10000)
+```
+
+The variance of sample average was about 0.095, and the variance of my distribution (n=10,000) was 1.03. The ratio of them is about 0.0921.
+
+
+**1d**
+
+
+```{r}
+#n = 400
+
+#create a matrix to hold generated samples, each row is a new sample
+#10 columns because you're generating 10 datapoints (n = 10)
+#average each row to get sample means
+matrix_holding_samples400 <- matrix(rnorm(900, mean = 0, sd = 1), nrow = 900, ncol = 400, byrow = TRUE)
+
+#calculate the sample means by summing the values of each row, then dividing by sample size
+sample_means400 <- rowSums(matrix_holding_samples)/400
+
+#sample variance of sample averages
+var(sample_means400)
+
+#variance of distribution
+var(sample10000)
+
+#ratio of sample variance of sample averages : variance of my distribution
+var(sample_means400)/var(sample10000)
+
+#n = 10,000
+
+
+
+
+#create a matrix to hold generated samples, each row is a new sample
+#10 columns because you're generating 10 datapoints (n = 10)
+#average each row to get sample means
+matrix_holding_samples10k <- matrix(rnorm(900, mean = 0, sd = 1), nrow = 900, ncol = 10000, byrow = TRUE)
+
+#calculate the sample means by summing the values of each row, then dividing by sample size
+sample_means10k <- rowSums(matrix_holding_samples)/10000
+
+#sample variance of sample averages
+var(sample_means10k)
+
+#variance of distribution
+var(sample10000)
+
+#ratio of sample variance of sample averages : variance of my distribution
+var(sample_means10k)/var(sample10000)
+```
+
+As we see the sample size increase, we observe the variance decreasing and the ratio of the variances also simultaneously decreasing.
+
+**2a**
+
+```{r}
+#ancillary
+X <- rnorm(9, mean = 0, sd = 3)
+
+#outcome w/ conditional expectation
+Y <- 1 + 2*X
+
+plot(X,Y)
+```
+
+**2b**
+
+```{r}
+#create a linear model for Beta hat
+linear_model <- lm(Y ~ X)
+
+summary(linear_model)
+```
+
+Our intercept is almost exactly 1 and our slope is 2, which is as expected.
+
+**2c**
+
+```{r}
+X900 <- rnorm(900, mean =0, sd = 3)
+Y900 <- 1 + 2*X900
+
+plot(X900, Y900)
+
+linear_model_900 <- lm(Y900 ~ X900)
+
+summary(linear_model_900)
+```
+
+As above, the slope is nearly 2 and the intercept is nearly 1.
+
+**2d**
+
+```{r}
+
+matrix_X <- matrix(rnorm(10*400, mean =0, sd = 1), nrow =400, ncol = 9)
+
+epsilon = matrix(rnorm(10*400, mean =0, sd =0.5), nrow = 400, ncol = 9)
+
+matrix_Y <- 1 + 2*matrix_X + epsilon
+
+
+#create am empty list to use later
+beta1_list = NULL
+
+#iterate thru matrix, then generate beta 1 coefficient for the given index and save to list to plot later
+for(i in 1:400){
+  beta1_list <- c(beta1_list, lm(matrix_Y[i,] ~ matrix_X[i,])$coefficients[2])
+}
+
+
+hist(beta1_list)
+
+```
+
+
+**2e**
+
+```{r}
+
+matrix_X900 <- matrix(rnorm(10*900, mean =0, sd = 1), nrow =900, ncol = 9)
+epsilon900 <- matrix(rnorm(10*900, mean =0, sd =0.5), nrow = 900, ncol = 9)
+matrix_Y900 <- 1 + 2*matrix_X900 + epsilon900
+
+#create am empty list to use later
+beta1_list900 = NULL
+
+#iterate thru matrix, then generate beta 1 coefficient for the given index and save to list to plot later
+for(i in 1:900){
+  beta1_list900 <- c(beta1_list900, lm(matrix_Y900[i,] ~ matrix_X900[i,])$coefficients[2])
+}
+
+
+hist(beta1_list900)
+
+```
+
+The data is much less spread out for the sample size of 900 compared to the 400 sample size data. The data is also much more clustered around the mean. Both datasets were generated using the same amount of error. This is to be expected because of the law of large numbers.
+
